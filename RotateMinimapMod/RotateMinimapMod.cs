@@ -27,10 +27,19 @@ namespace RotateMinimapMod
             if (self.m_mode == Minimap.MapMode.Small)
             {
                 self.m_smallMarker.rotation = Quaternion.Euler(0, 0, 0);
-                self.m_smallShipMarker.gameObject.SetActive(value: false);
+                Ship controlledShip = player.GetControlledShip();
+                if ((bool)controlledShip)
+                {
+                    self.m_smallShipMarker.gameObject.SetActive(value: true);
+                }
+                else
+                {
+                    self.m_smallShipMarker.gameObject.SetActive(value: false);
+                }
+                
             } else
             {
-                
+                orig(self, player, playerRot);
             }
         }
 
