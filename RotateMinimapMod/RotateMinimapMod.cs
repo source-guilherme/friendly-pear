@@ -54,8 +54,11 @@ namespace RotateMinimapMod
         private void Minimap_CenterMap(On.Minimap.orig_CenterMap orig, Minimap self, Vector3 centerPoint)
         {
             self.m_mapImageSmall.transform.rotation = Quaternion.Euler(0, 0, Player.m_localPlayer.m_eye.transform.rotation.eulerAngles.y);
-            self.m_pinRootSmall.transform.rotation = Quaternion.Euler(0, 0, Player.m_localPlayer.m_eye.transform.rotation.eulerAngles.y - 360);
-            self.m_pinRootSmall.transform.Find("MapPin").rotation = Quaternion.Euler(0, 0, 0);
+            self.m_pinRootSmall.transform.rotation = Quaternion.Euler(0, 0, Player.m_localPlayer.m_eye.transform.rotation.eulerAngles.y);
+            for (int i = 0; i < self.m_pinRootSmall.childCount; i++)
+            {
+                self.m_pinRootSmall.transform.GetChild(i).transform.rotation = Quaternion.identity;
+            }
             orig(self, centerPoint);
         }
     }
