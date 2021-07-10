@@ -13,17 +13,24 @@ namespace RotateMinimapMod
         public const string PluginGUID = "com.source-guilherme.rotateminimapmod";
         public const string PluginName = "RotateMinimapMod";
         public const string PluginVersion = "0.0.1";
-        public SpriteRenderer rend;
-        public Sprite roundMask;
+
+        public GameObject minimapMaskContainerPrefab; 
 
         private void Awake()
         {
             On.Minimap.Awake += Minimap_Awake;
-            On.Minimap.CenterMap += Minimap_CenterMap;
-            On.Minimap.UpdatePlayerMarker += Minimap_UpdatePlayerMarker;
-            rend = GetComponent<SpriteRenderer>();
-            roundMask = (Sprite)Resources.Load("Package/roundmask.png");
-            rend.sprite = roundMask;
+           // On.Minimap.CenterMap += Minimap_CenterMap;
+           // On.Minimap.UpdatePlayerMarker += Minimap_UpdatePlayerMarker;
+
+            AssetBundle assetBundle = AssetUtils.LoadAssetBundleFromResources("rotate_minimap", typeof(RotateMinimapMod).Assembly);
+            try
+            {
+                minimapMaskContainerPrefab = assetBundle.LoadAsset<GameObject>("MinimapMask");
+            } finally
+            {
+                assetBundle.Unload(false);
+            }
+             
             Jotunn.Logger.LogInfo("RotateMinimapMod has loaded!");
         }
 
@@ -51,21 +58,21 @@ namespace RotateMinimapMod
 
         private void Minimap_Awake(On.Minimap.orig_Awake orig, Minimap self)
         {
-            self.m_pinRootSmall.SetParent(self.m_smallRoot.transform);
-            self.m_smallShipMarker.SetParent(self.m_smallRoot.transform);
-            self.m_smallMarker.SetParent(self.m_smallRoot.transform);
-            self.m_windMarker.SetParent(self.m_smallRoot.transform);
+            GameObject maskContainer = Object.Instantiate(minimapMaskContainerPrefab, self.m_smallRoot.transform);
+            Transform container = maskContainer.transform;
+            self.m_mapImageSmall.transform.SetParent(container);
+            self.m_smallShipMarker.SetParent(container);
+            self.m_smallMarker.SetParent(container);
+            self.m_windMarker.SetParent(container);
         }
 
         private void Minimap_CenterMap(On.Minimap.orig_CenterMap orig, Minimap self, Vector3 centerPoint)
         {
             self.m_mapImageSmall.transform.rotation = Quaternion.Euler(0, 0, Player.m_localPlayer.m_eye.transform.rotation.eulerAngles.y);
-            self.m_pinRootSmall.transform.rotation = Quaternion.Euler(0, 0, Player.m_localPlayer.m_eye.transform.rotation.eulerAngles.y);
             for (int i = 0; i < self.m_pinRootSmall.childCount; i++)
             {
                 self.m_pinRootSmall.transform.GetChild(i).transform.rotation = Quaternion.identity;
-            }
-            self.m_smallRoot.AddComponent<SpriteMask>().sprite = rend.sprite;
+            } 
             orig(self, centerPoint);
         }
     }
