@@ -85,6 +85,8 @@
     <None Include="app.config" />
     <EmbeddedResource Include="EmbbededAssets\rotate_minimap" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Package\finalmask" />
+    <None Include="Package\finalmask.manifest" />
     <None Include="Package\README.md" />
   </ItemGroup>
   <ItemGroup>
@@ -95,7 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package\icon.png" />
-    <Content Include="Package\roundmask.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="JotunnPostBuildTaskWin" Condition="'$(OS)' == 'Windows_NT'">
