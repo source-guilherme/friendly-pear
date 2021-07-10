@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b6cc19cb6f52f9741a37a81cbd0e9e50
+guid: 502db03ff4177d747853250609ef1aa6
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -31,12 +31,12 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: -1
+    filterMode: 2
     aniso: -1
     mipBias: -100
     wrapU: 1
     wrapV: 1
-    wrapW: -1
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -100,5 +100,5 @@ TextureImporter:
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
   userData: 
-  assetBundleName: finalmask
+  assetBundleName: 
   assetBundleVariant: 
