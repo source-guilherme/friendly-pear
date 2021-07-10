@@ -13,12 +13,17 @@ namespace RotateMinimapMod
         public const string PluginGUID = "com.source-guilherme.rotateminimapmod";
         public const string PluginName = "RotateMinimapMod";
         public const string PluginVersion = "0.0.1";
+        public SpriteRenderer rend;
+        public Sprite roundMask;
 
         private void Awake()
         {
             On.Minimap.Awake += Minimap_Awake;
             On.Minimap.CenterMap += Minimap_CenterMap;
             On.Minimap.UpdatePlayerMarker += Minimap_UpdatePlayerMarker;
+            rend = GetComponent<SpriteRenderer>();
+            roundMask = (Sprite)Resources.Load("Package/roundmask.png");
+            rend.sprite = roundMask;
             Jotunn.Logger.LogInfo("RotateMinimapMod has loaded!");
         }
 
@@ -31,12 +36,13 @@ namespace RotateMinimapMod
                 if ((bool)controlledShip)
                 {
                     self.m_smallShipMarker.gameObject.SetActive(value: true);
+                    float yawShip = controlledShip.GetShipYawAngle();
+                    self.m_smallShipMarker.transform.rotation = Quaternion.Euler(0, 0, yawShip);
                 }
                 else
                 {
                     self.m_smallShipMarker.gameObject.SetActive(value: false);
                 }
-                
             } else
             {
                 orig(self, player, playerRot);
@@ -46,9 +52,9 @@ namespace RotateMinimapMod
         private void Minimap_Awake(On.Minimap.orig_Awake orig, Minimap self)
         {
             self.m_pinRootSmall.SetParent(self.m_smallRoot.transform);
+            self.m_smallShipMarker.SetParent(self.m_smallRoot.transform);
             self.m_smallMarker.SetParent(self.m_smallRoot.transform);
             self.m_windMarker.SetParent(self.m_smallRoot.transform);
-            self.m_smallShipMarker.SetParent(self.m_smallRoot.transform);
         }
 
         private void Minimap_CenterMap(On.Minimap.orig_CenterMap orig, Minimap self, Vector3 centerPoint)
@@ -59,6 +65,7 @@ namespace RotateMinimapMod
             {
                 self.m_pinRootSmall.transform.GetChild(i).transform.rotation = Quaternion.identity;
             }
+            self.m_smallRoot.AddComponent<SpriteMask>().sprite = rend.sprite;
             orig(self, centerPoint);
         }
     }
