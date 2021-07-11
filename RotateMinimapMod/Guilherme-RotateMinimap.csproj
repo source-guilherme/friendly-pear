@@ -85,8 +85,6 @@
     <None Include="app.config" />
     <EmbeddedResource Include="EmbbededAssets\rotate_minimap" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Package\finalmask" />
-    <None Include="Package\finalmask.manifest" />
     <None Include="Package\README.md" />
   </ItemGroup>
   <ItemGroup>
