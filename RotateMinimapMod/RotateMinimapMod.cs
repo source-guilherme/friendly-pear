@@ -3,6 +3,7 @@ using UnityEngine;
 using BepInEx.Configuration;
 using Jotunn.Utils;
 using UnityEngine.UI;
+using System.Reflection;
 
 namespace RotateMinimapMod
 {
@@ -15,20 +16,8 @@ namespace RotateMinimapMod
         public const string PluginName = "RotateMinimapMod";
         public const string PluginVersion = "0.0.1";
 
-        public GameObject minimapMaskContainerPrefab;
-
         private void Awake()
         {
-            AssetBundle assetBundle = AssetUtils.LoadAssetBundleFromResources("rotate_minimap", typeof(RotateMinimapMod).Assembly);
-            try
-            {
-                minimapMaskContainerPrefab = assetBundle.LoadAsset<GameObject>("MinimapMask");
-            }
-            finally
-            {
-                assetBundle.Unload(false);
-            }
-
             On.Minimap.Awake += Minimap_Awake;
             On.Minimap.CenterMap += Minimap_CenterMap;
             On.Minimap.UpdatePlayerMarker += Minimap_UpdatePlayerMarker;
@@ -60,17 +49,16 @@ namespace RotateMinimapMod
 
         private void Minimap_Awake(On.Minimap.orig_Awake orig, Minimap self)
         {
-            GameObject maskContainer = Instantiate(minimapMaskContainerPrefab, self.m_smallRoot.transform);
-            Transform container = maskContainer.transform;
-            self.m_mapImageSmall.transform.SetParent(container);
-            self.m_smallShipMarker.transform.SetParent(container);
-            self.m_smallMarker.transform.SetParent(container);
-            self.m_windMarker.transform.SetParent(container);
+            self.m_pinRootSmall.SetParent(self.m_smallRoot.transform);
+            self.m_smallShipMarker.SetParent(self.m_smallRoot.transform);
+            self.m_smallMarker.SetParent(self.m_smallRoot.transform);
+            self.m_windMarker.SetParent(self.m_smallRoot.transform);
         }
 
         private void Minimap_CenterMap(On.Minimap.orig_CenterMap orig, Minimap self, Vector3 centerPoint)
         {
             self.m_mapImageSmall.transform.rotation = Quaternion.Euler(0, 0, Player.m_localPlayer.m_eye.transform.rotation.eulerAngles.y);
+            self.m_pinRootSmall.transform.rotation = Quaternion.Euler(0, 0, Player.m_localPlayer.m_eye.transform.rotation.eulerAngles.y);
             for (int i = 0; i < self.m_pinRootSmall.childCount; i++)
             {
                 self.m_pinRootSmall.transform.GetChild(i).transform.rotation = Quaternion.identity;
